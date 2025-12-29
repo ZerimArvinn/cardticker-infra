@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CardTicker — Coming Soon</title>
+  <meta name="description" content="CardTicker is launching soon. Get alerts and early access." />
+
+  <style>
+    :root {
+      --bg: #070a12;
+      --panel: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.10);
+      --text: #e8edf7;
+      --muted: #9aa7bd;
+      --primary: #38bdf8;
+      --good: #22c55e;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      background:
+        radial-gradient(900px 500px at 15% -10%, rgba(56,189,248,.20), transparent 60%),
+        radial-gradient(800px 420px at 85% 0%, rgba(34,197,94,.14), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.04), transparent 25%),
+        var(--bg);
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      overflow-x: hidden;
+    }
+
+    /* subtle grid */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
+      background-size: 90px 90px;
+      opacity: .07;
+      mask-image: radial-gradient(60% 45% at 50% 20%, black, transparent);
+    }
+
+    .wrap {
+      width: min(980px, 100%);
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .wrap { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 34px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 24px 60px rgba(0,0,0,.55);
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: radial-gradient(650px 180px at 25% 0%, rgba(56,189,248,.18), transparent 60%);
+      opacity: .65;
+      pointer-events: none;
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 900;
+      letter-spacing: .3px;
+      font-size: 18px;
+    }
+
+    .statusDot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--good);
+      box-shadow: 0 0 0 6px rgba(34,197,94,.14);
+    }
+
+    .pill {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(56,189,248,.12);
+      color: var(--primary);
+      border: 1px solid rgba(56,189,248,.22);
+      white-space: nowrap;
+    }
+
+    h1 {
+      margin: 22px 0 10px;
+      font-size: 44px;
+      line-height: 1.06;
+      position: relative;
+      z-index: 1;
+    }
+
+    p {
+      margin: 0 0 20px;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 64ch;
+      position: relative;
+      z-index: 1;
+    }
+
+    .ctaRow {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(56,189,248,.28);
+      background: linear-gradient(180deg, rgba(56,189,248,.95), rgba(14,165,233,.85));
+      color: #051018;
+      font-weight: 900;
+      text-decoration: none;
+      box-shadow: 0 14px 28px rgba(56,189,248,.22);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 18px 34px rgba(56,189,248,.30); }
+
+    .btn.secondary {
+      background: rgba(255,255,255,.04);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: none;
+      font-weight: 800;
+    }
+
+    .note {
+      margin-top: 10px;
+      color: #7c8aa3;
+      font-size: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .sideTitle {
+      margin: 0 0 12px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--muted);
+      position: relative;
+      z-index: 1;
+    }
+
+    .metric {
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: 14px;
+      padding: 14px;
+      background: rgba(0,0,0,.20);
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .metric .label { color: var(--muted); font-size: 12px; }
+    .metric .value { font-size: 22px; font-weight: 950; margin-top: 6px; }
+    .bar {
+      height: 8px;
+      background: rgba(255,255,255,.06);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 10px;
+      border: 1px solid rgba(255,255,255,.06);
+    }
+    .bar > span {
+      display: block;
+      height: 100%;
+      width: 72%;
+      background: linear-gradient(90deg, rgba(34,197,94,.95), rgba(56,189,248,.95));
+    }
+
+    .list {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .tiny {
+      color: #6e7f9b;
+      font-size: 12px;
+      line-height: 1.5;
+      margin-top: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .footer {
+      margin-top: 16px;
+      color: #6e7f9b;
+      font-size: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.25);
+      color: #cdd7ea;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <section class="card">
+      <div class="top">
+        <div class="brand"><span class="statusDot"></span>CardTicker</div>
+        <div class="pill">Coming Soon</div>
+      </div>
+
+      <h1>Market-ready insights, built for speed.</h1>
+      <p>
+        We’re building a clean, fast way to track movement, spot trends, and stay ahead — from a single dashboard
+        that feels like a modern terminal.
+      </p>
+
+      <div class="ctaRow">
+        <a class="btn" href="#" onclick="return false;">📩 Get launch updates</a>
+        <a class="btn secondary" href="#" onclick="return false;">✨ Request early access</a>
+      </div>
+
+      <div class="note">
+        Tip: when we launch, this page will move to <span class="kbd">app.cardticker.ai</span> and you’ll be redirected automatically.
+      </div>
+
+      <div class="footer">© 2025 CardTicker</div>
+    </section>
+
+    <aside class="card">
+      <div class="sideTitle">What’s included at launch</div>
+
+      <div class="metric">
+        <div class="label">Build status</div>
+        <div class="value">In progress</div>
+        <div class="bar"><span></span></div>
+      </div>
+
+      <div class="metric">
+        <div class="label">First release</div>
+        <ul class="list">
+          <li>Watchlists & alerting</li>
+          <li>Trend boards & movement</li>
+          <li>Fast search & saved views</li>
+        </ul>
+      </div>
+
+      <div class="metric">
+        <div class="label">Contact</div>
+        <div class="value" style="font-size:16px;margin-top:8px;">hello@cardticker.ai</div>
+        <div class="tiny">Want a demo? Send a note and we’ll schedule it.</div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>
