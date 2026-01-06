@@ -2,253 +2,301 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CardTicker — Coming Soon</title>
-  <meta name="description" content="CardTicker is launching soon. Get alerts and early access." />
+  <meta name="description" content="CardTicker is launching soon — track Pokémon & TCG card trends, watchlists, and alerts." />
 
   <style>
-    :root {
-      --bg: #070a12;
-      --panel: rgba(255,255,255,0.06);
-      --border: rgba(255,255,255,0.10);
-      --text: #e8edf7;
-      --muted: #9aa7bd;
-      --primary: #38bdf8;
-      --good: #22c55e;
+    :root{
+      --bg:#070813;
+      --panel:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.12);
+      --text:#eef3ff;
+      --muted:#a7b2cc;
+
+      --red:#ff3b4e;
+      --blue:#2dd4ff;
+      --yellow:#ffd166;
+      --green:#22c55e;
+
+      --shadow: 0 24px 60px rgba(0,0,0,.55);
+      --radius: 18px;
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      color: var(--text);
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+      color:var(--text);
       background:
-        radial-gradient(900px 500px at 15% -10%, rgba(56,189,248,.20), transparent 60%),
-        radial-gradient(800px 420px at 85% 0%, rgba(34,197,94,.14), transparent 55%),
-        linear-gradient(180deg, rgba(255,255,255,.04), transparent 25%),
+        radial-gradient(900px 520px at 15% -10%, rgba(255,59,78,.20), transparent 60%),
+        radial-gradient(860px 520px at 88% 0%, rgba(45,212,255,.20), transparent 55%),
+        radial-gradient(760px 520px at 60% 110%, rgba(255,209,102,.14), transparent 55%),
+        linear-gradient(180deg, rgba(255,255,255,.04), transparent 26%),
         var(--bg);
-      display: grid;
-      place-items: center;
-      padding: 28px;
-      overflow-x: hidden;
+      display:grid;
+      place-items:center;
+      padding:28px;
+      overflow-x:hidden;
     }
 
-    /* subtle grid */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
+    /* subtle holo grid */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
       background-image:
         linear-gradient(rgba(255,255,255,.06) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.06) 1px, transparent 1px);
-      background-size: 90px 90px;
-      opacity: .07;
-      mask-image: radial-gradient(60% 45% at 50% 20%, black, transparent);
+      background-size: 96px 96px;
+      opacity:.07;
+      mask-image: radial-gradient(65% 55% at 50% 20%, black, transparent);
     }
 
-    .wrap {
-      width: min(980px, 100%);
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 18px;
+    .wrap{
+      width:min(1100px, 100%);
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:18px;
+      align-items:start;
     }
+    @media (max-width: 940px){ .wrap{grid-template-columns:1fr} }
 
-    @media (max-width: 900px) {
-      .wrap { grid-template-columns: 1fr; }
-    }
-
-    .card {
-      position: relative;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 34px;
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:34px;
       backdrop-filter: blur(10px);
-      box-shadow: 0 24px 60px rgba(0,0,0,.55);
-      overflow: hidden;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
     }
 
-    .card::after {
-      content: "";
-      position: absolute;
-      inset: -2px;
-      background: radial-gradient(650px 180px at 25% 0%, rgba(56,189,248,.18), transparent 60%);
-      opacity: .65;
-      pointer-events: none;
+    /* holo sheen */
+    .card::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background:
+        radial-gradient(720px 220px at 18% 0%, rgba(45,212,255,.18), transparent 60%),
+        radial-gradient(520px 220px at 75% 10%, rgba(255,59,78,.14), transparent 60%),
+        radial-gradient(520px 260px at 45% 120%, rgba(255,209,102,.12), transparent 60%);
+      opacity:.75;
+      pointer-events:none;
     }
 
-    .top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      position: relative;
-      z-index: 1;
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      position:relative;
+      z-index:1;
     }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 900;
-      letter-spacing: .3px;
-      font-size: 18px;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:950;
+      letter-spacing:.2px;
+      font-size:18px;
     }
 
-    .statusDot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--good);
-      box-shadow: 0 0 0 6px rgba(34,197,94,.14);
+    .orb{
+      width:14px;height:14px;border-radius:50%;
+      background: conic-gradient(from 180deg, var(--red), var(--yellow), var(--blue), var(--red));
+      box-shadow: 0 0 0 7px rgba(255,255,255,.06), 0 0 22px rgba(45,212,255,.20);
     }
 
-    .pill {
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(56,189,248,.12);
-      color: var(--primary);
-      border: 1px solid rgba(56,189,248,.22);
-      white-space: nowrap;
+    .pill{
+      font-size:12px;
+      font-weight:850;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      padding:8px 12px;
+      border-radius:999px;
+      color:var(--blue);
+      background: rgba(45,212,255,.10);
+      border:1px solid rgba(45,212,255,.22);
+      white-space:nowrap;
     }
 
-    h1 {
-      margin: 22px 0 10px;
-      font-size: 44px;
-      line-height: 1.06;
-      position: relative;
-      z-index: 1;
+    h1{
+      margin:22px 0 10px;
+      font-size:46px;
+      line-height:1.05;
+      position:relative;
+      z-index:1;
+    }
+    @media (max-width: 540px){ h1{font-size:36px} }
+
+    p{
+      margin:0 0 18px;
+      color:var(--muted);
+      line-height:1.65;
+      max-width:70ch;
+      position:relative;
+      z-index:1;
     }
 
-    p {
-      margin: 0 0 20px;
-      color: var(--muted);
-      line-height: 1.65;
-      max-width: 64ch;
-      position: relative;
-      z-index: 1;
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+      position:relative;
+      z-index:1;
     }
 
-    .ctaRow {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-top: 18px;
-      position: relative;
-      z-index: 1;
+    .chip{
+      font-size:13px;
+      color:#cdd7ee;
+      padding:10px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+    }
+    .chip strong{ color: var(--text); }
+
+    .cta{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:20px;
+      position:relative;
+      z-index:1;
     }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      padding: 14px 18px;
-      border-radius: 12px;
-      border: 1px solid rgba(56,189,248,.28);
-      background: linear-gradient(180deg, rgba(56,189,248,.95), rgba(14,165,233,.85));
-      color: #051018;
-      font-weight: 900;
-      text-decoration: none;
-      box-shadow: 0 14px 28px rgba(56,189,248,.22);
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      padding:14px 18px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.10);
+      color:#07121a;
+      font-weight:950;
+      text-decoration:none;
+      background: linear-gradient(180deg, rgba(255,209,102,.98), rgba(245,158,11,.92));
+      box-shadow: 0 16px 34px rgba(255,209,102,.22);
       transition: transform .15s ease, box-shadow .15s ease;
+      user-select:none;
     }
-    .btn:hover { transform: translateY(-1px); box-shadow: 0 18px 34px rgba(56,189,248,.30); }
+    .btn:hover{ transform: translateY(-1px); box-shadow: 0 20px 42px rgba(255,209,102,.28); }
 
-    .btn.secondary {
-      background: rgba(255,255,255,.04);
+    .btn.secondary{
+      background: rgba(255,255,255,.05);
       color: var(--text);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: none;
-      font-weight: 800;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow:none;
+      font-weight:850;
     }
 
-    .note {
-      margin-top: 10px;
-      color: #7c8aa3;
-      font-size: 12px;
-      position: relative;
-      z-index: 1;
+    .note{
+      margin-top:12px;
+      color:#7f8cab;
+      font-size:12px;
+      position:relative;
+      z-index:1;
     }
 
-    .sideTitle {
-      margin: 0 0 12px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: var(--muted);
-      position: relative;
-      z-index: 1;
+    .grid{
+      display:grid;
+      gap:12px;
+      position:relative;
+      z-index:1;
     }
 
-    .metric {
-      border: 1px solid rgba(255,255,255,.10);
-      border-radius: 14px;
-      padding: 14px;
+    .panel{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      padding:14px;
       background: rgba(0,0,0,.20);
-      margin-bottom: 12px;
-      position: relative;
-      z-index: 1;
     }
 
-    .metric .label { color: var(--muted); font-size: 12px; }
-    .metric .value { font-size: 22px; font-weight: 950; margin-top: 6px; }
-    .bar {
-      height: 8px;
+    .panel .label{ color:var(--muted); font-size:12px; }
+    .panel .value{ font-size:22px; font-weight:950; margin-top:6px; }
+
+    .bar{
+      height:8px;
       background: rgba(255,255,255,.06);
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 10px;
+      border-radius:999px;
+      overflow:hidden;
+      margin-top:10px;
       border: 1px solid rgba(255,255,255,.06);
     }
-    .bar > span {
-      display: block;
-      height: 100%;
-      width: 72%;
-      background: linear-gradient(90deg, rgba(34,197,94,.95), rgba(56,189,248,.95));
+    .bar > span{
+      display:block;height:100%;width:70%;
+      background: linear-gradient(90deg, rgba(255,59,78,.95), rgba(45,212,255,.95));
     }
 
-    .list {
-      margin: 10px 0 0;
-      padding-left: 18px;
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 14px;
+    ul{
+      margin:10px 0 0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.6;
+      font-size:14px;
     }
 
-    .tiny {
-      color: #6e7f9b;
-      font-size: 12px;
-      line-height: 1.5;
-      margin-top: 14px;
-      position: relative;
-      z-index: 1;
+    .tiny{
+      color:#6f7fa2;
+      font-size:12px;
+      line-height:1.5;
+      margin-top:12px;
     }
 
-    .footer {
-      margin-top: 16px;
-      color: #6e7f9b;
-      font-size: 12px;
-      position: relative;
-      z-index: 1;
+    .badgeRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:10px;
     }
 
-    .kbd {
+    .badge{
+      font-size:12px;
+      font-weight:800;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color:#cfe9ff;
+    }
+
+    .footer{
+      margin-top:16px;
+      color:#6f7fa2;
+      font-size:12px;
+      position:relative;
+      z-index:1;
+    }
+
+    .spark{
+      display:inline-block;
+      padding:2px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      color:#cfe9ff;
+      font-weight:800;
+      font-size:12px;
+      letter-spacing:.04em;
+      margin-left:8px;
+    }
+
+    .kbd{
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-size: 12px;
-      padding: 2px 6px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,.14);
+      font-size:12px;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid rgba(255,255,255,.14);
       background: rgba(0,0,0,.25);
-      color: #cdd7ea;
+      color:#cdd7ea;
     }
   </style>
 </head>
@@ -257,50 +305,69 @@
   <div class="wrap">
     <section class="card">
       <div class="top">
-        <div class="brand"><span class="statusDot"></span>CardTicker</div>
+        <div class="brand"><span class="orb" aria-hidden="true"></span>CardTicker</div>
         <div class="pill">Coming Soon</div>
       </div>
 
-      <h1>Market-ready insights, built for speed.</h1>
+      <h1>Pokémon & TCG tracking, made simple.</h1>
       <p>
-        We’re building a clean, fast way to track movement, spot trends, and stay ahead — from a single dashboard
-        that feels like a modern terminal.
+        Follow the cards you care about with clean watchlists, smart alerts, and trend views that actually help.
+        No clutter — just the signal: what’s rising, what’s dipping, and what’s getting attention.
       </p>
 
-      <div class="ctaRow">
-        <a class="btn" href="#" onclick="return false;">📩 Get launch updates</a>
+      <div class="chips" aria-label="Highlights">
+        <div class="chip"><strong>Watchlists</strong> for cards & sets</div>
+        <div class="chip"><strong>Alerts</strong> for spikes & dips</div>
+        <div class="chip"><strong>Trends</strong> by set/rarity</div>
+        <div class="chip"><strong>Fast</strong> search & saves</div>
+      </div>
+
+      <div class="cta">
+        <a class="btn" href="#" onclick="return false;">🎟️ Join the waitlist</a>
         <a class="btn secondary" href="#" onclick="return false;">✨ Request early access</a>
       </div>
 
       <div class="note">
-        Tip: when we launch, this page will move to <span class="kbd">app.cardticker.ai</span> and you’ll be redirected automatically.
+        Launching with Pokémon TCG support first. Other TCGs can follow.
+        <span class="spark">⚡ launching soon</span>
       </div>
 
-      <div class="footer">© 2025 CardTicker</div>
+      <div class="footer">
+        <br />© 2025 CardTicker
+      </div>
     </section>
 
     <aside class="card">
-      <div class="sideTitle">What’s included at launch</div>
+      <div class="grid">
+        <div class="panel">
+          <div class="label">Build status</div>
+          <div class="value">In progress</div>
+          <div class="bar"><span></span></div>
+          <div class="badgeRow" aria-label="Status badges">
+            <div class="badge">Watchlists</div>
+            <div class="badge">Alerts</div>
+            <div class="badge">Trends</div>
+          </div>
+        </div>
 
-      <div class="metric">
-        <div class="label">Build status</div>
-        <div class="value">In progress</div>
-        <div class="bar"><span></span></div>
-      </div>
+        <div class="panel">
+          <div class="label">Planned at launch</div>
+          <ul>
+            <li>Card pages with pricing snapshots and recent activity</li>
+            <li>Set-level trend boards (movers, breakouts, pullbacks)</li>
+            <li>Alerts for listings, dips, and sudden jumps</li>
+            <li>Organized watchlists that stay clean over time</li>
+          </ul>
+          <div class="tiny">
+            Built for collectors: fast search, clean layouts, and signal-first views.
+          </div>
+        </div>
 
-      <div class="metric">
-        <div class="label">First release</div>
-        <ul class="list">
-          <li>Watchlists & alerting</li>
-          <li>Trend boards & movement</li>
-          <li>Fast search & saved views</li>
-        </ul>
-      </div>
-
-      <div class="metric">
-        <div class="label">Contact</div>
-        <div class="value" style="font-size:16px;margin-top:8px;">hello@cardticker.ai</div>
-        <div class="tiny">Want a demo? Send a note and we’ll schedule it.</div>
+        <div class="panel">
+          <div class="label">Contact</div>
+          <div class="value" style="font-size:16px;margin-top:8px;">arvin@cardticker.ai</div>
+          <div class="tiny">Want to partner or provide data? Reach out.</div>
+        </div>
       </div>
     </aside>
   </div>
